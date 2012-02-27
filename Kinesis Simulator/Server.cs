@@ -54,11 +54,12 @@ namespace Kinesis_Simulator
 
         void socketServer_NewMessageReceived(WebSocketSession session, string e)
         {
-            SendToAll(session.Cookies["name"] + ": " + e);
+            Console.WriteLine(e);
         }
 
         void socketServer_NewSessionConnected(WebSocketSession session)
         {
+            Console.WriteLine(session);
             lock (m_SessionSyncRoot)
                 m_Sessions.Add(session);
         }

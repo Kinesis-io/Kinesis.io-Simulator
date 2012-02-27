@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Diagnostics;
+using System.ServiceProcess;
 
 namespace Kinesis_Simulator
 {
@@ -42,21 +43,78 @@ namespace Kinesis_Simulator
             }
         }
 
+        public static bool StartService(string serviceName, int timeoutMilliseconds)
+        {
+            ServiceController service = new ServiceController(serviceName);
+            if (service == null)
+                return true;
+            try
+            {
+                TimeSpan timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds);
+
+                service.Start();
+                service.WaitForStatus(ServiceControllerStatus.Running, timeout);
+            }
+            catch (InvalidOperationException e)
+            {
+                MessageBox.Show("Error: Please run the simulator as an Administrator");
+                return false;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+                return false;
+            }
+            return true;
+        }
+
+        public static bool StopService(string serviceName, int timeoutMilliseconds)
+        {
+            ServiceController service = new ServiceController(serviceName);
+            if (service == null)
+                return true;
+
+            try
+            {
+                TimeSpan timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds);
+
+                service.Stop();
+                service.WaitForStatus(ServiceControllerStatus.Stopped, timeout);
+            }
+            catch (InvalidOperationException e)
+            {
+                MessageBox.Show("Error: Please run the simulator as an Administrator");
+                return false;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+                return false;
+            }
+            return true;
+        }
+
         private void Start_Server_Click(object sender, RoutedEventArgs e)
         {
-            server.Start();
-            Start_Server.IsEnabled = false;
-            Stop_Server.IsEnabled = true;
+            if (StopService("Kinesis-io", 5000))
+            {
+                server.Start();
+                Start_Server.IsEnabled = false;
+                Stop_Server.IsEnabled = true;
+            }
         }
 
         private void Stop_Server_Click(object sender, RoutedEventArgs e)
         {
-            if (server != null)
+            if (StartService("Kinesis-io", 5000))
             {
-                server.Stop();
-                Start_Server.IsEnabled = true;
-                Stop_Server.IsEnabled = false;
-            }
+                if (server != null)
+                {
+                    server.Stop();
+                    Start_Server.IsEnabled = true;
+                    Stop_Server.IsEnabled = false;
+                }
+            }      
         }
 
         private void Speech_Send_Click(object sender, RoutedEventArgs e)
