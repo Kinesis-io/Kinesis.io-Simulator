@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kinesis Simulator", "Kinesis Simulator\Kinesis Simulator.csproj", "{0D87CB43-9DCC-425A-AB65-FBA3219B0742}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Kinesis Simulator Setup", "Kinesis Simulator Setup\Kinesis Simulator Setup.vdproj", "{2BABDBB1-F919-4588-B9DA-32D025B18839}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -15,8 +13,6 @@ Global
 		{0D87CB43-9DCC-425A-AB65-FBA3219B0742}.Debug|x86.Build.0 = Debug|x86
 		{0D87CB43-9DCC-425A-AB65-FBA3219B0742}.Release|x86.ActiveCfg = Release|x86
 		{0D87CB43-9DCC-425A-AB65-FBA3219B0742}.Release|x86.Build.0 = Release|x86
-		{2BABDBB1-F919-4588-B9DA-32D025B18839}.Debug|x86.ActiveCfg = Debug
-		{2BABDBB1-F919-4588-B9DA-32D025B18839}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

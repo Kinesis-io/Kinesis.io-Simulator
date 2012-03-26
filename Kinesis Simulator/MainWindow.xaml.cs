@@ -14,6 +14,8 @@ using System.Windows.Shapes;
 using System.Diagnostics;
 using System.ServiceProcess;
 
+using System.Security.Principal;
+
 namespace Kinesis_Simulator
 {
     /// <summary>
@@ -33,21 +35,55 @@ namespace Kinesis_Simulator
         {
             Start_Server.IsEnabled = true;
             Stop_Server.IsEnabled = false;
+
+            bool isAdmin = new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator) ? true : false;
+            if (isAdmin)
+            {
+            }
+            else
+            {
+                MessageBox.Show("Please run the Kinesis Simulator as an Administrator.");
+            }
+
         }
 
         private void Window_Unloaded(object sender, RoutedEventArgs e)
         {
+            MessageBox.Show("hello");
             if (server != null)
             {
                 server.Stop();
             }
         }
 
+        public static bool IsServiceInstalled(string serviceName)
+        {
+            // get list of Windows services
+
+            ServiceController[] services = ServiceController.GetServices();
+
+            // try to find service name
+
+            foreach (ServiceController service in services)
+            {
+                if (service.ServiceName == serviceName)
+                    return true;
+            }
+            return false;
+        }
+
         public static bool StartService(string serviceName, int timeoutMilliseconds)
         {
+            if (!IsServiceInstalled(serviceName))
+                return true;
+
             ServiceController service = new ServiceController(serviceName);
             if (service == null)
                 return true;
+
+            if (service.Status == ServiceControllerStatus.Running)
+                return true;
+
             try
             {
                 TimeSpan timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds);
@@ -57,6 +93,7 @@ namespace Kinesis_Simulator
             }
             catch (InvalidOperationException e)
             {
+                MessageBox.Show(e.ToString());
                 MessageBox.Show("Error: Please run the simulator as an Administrator");
                 return false;
             }
@@ -70,8 +107,16 @@ namespace Kinesis_Simulator
 
         public static bool StopService(string serviceName, int timeoutMilliseconds)
         {
+            if (!IsServiceInstalled(serviceName))
+                return true;
+
             ServiceController service = new ServiceController(serviceName);
+
             if (service == null)
+                return true;
+            
+            
+            if (service.Status == ServiceControllerStatus.Stopped)
                 return true;
 
             try
@@ -83,6 +128,7 @@ namespace Kinesis_Simulator
             }
             catch (InvalidOperationException e)
             {
+                MessageBox.Show(e.ToString());
                 MessageBox.Show("Error: Please run the simulator as an Administrator");
                 return false;
             }
@@ -96,7 +142,7 @@ namespace Kinesis_Simulator
 
         private void Start_Server_Click(object sender, RoutedEventArgs e)
         {
-            if (StopService("Kinesis-io", 5000))
+            if (StopService("Kinesis.io_Service", 5000))
             {
                 server.Start();
                 Start_Server.IsEnabled = false;
@@ -104,9 +150,9 @@ namespace Kinesis_Simulator
             }
         }
 
-        private void Stop_Server_Click(object sender, RoutedEventArgs e)
+        public void Stop_Event()
         {
-            if (StartService("Kinesis-io", 5000))
+            if (StartService("Kinesis.io_Service", 5000))
             {
                 if (server != null)
                 {
@@ -114,7 +160,12 @@ namespace Kinesis_Simulator
                     Start_Server.IsEnabled = true;
                     Stop_Server.IsEnabled = false;
                 }
-            }      
+            }
+        }
+
+        private void Stop_Server_Click(object sender, RoutedEventArgs e)
+        {
+             this.Stop_Event();     
         }
 
         private void Speech_Send_Click(object sender, RoutedEventArgs e)
@@ -201,10 +252,7 @@ namespace Kinesis_Simulator
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (server != null)
-            {
-                server.Stop();
-            }
+            Stop_Event();
         }
 
         private void Left_holdLeft_Click(object sender, RoutedEventArgs e)
