@@ -344,5 +344,15 @@ namespace Kinesis_Simulator
             button2.IsEnabled = false;
             button1.IsEnabled = true;
         }
+
+        private void button3_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("http://kinesis.io/download/");
+        }
+
+        private void button4_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/Kinesis-io/examples");
+        }
     }
 }
