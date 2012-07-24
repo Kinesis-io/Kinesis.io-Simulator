@@ -35,7 +35,7 @@
                     <Button Content="Crouch" HorizontalAlignment="Left" Margin="228,129,0,67" Name="Crouch" Width="75" Grid.ColumnSpan="2" Click="Crouch_Click" IsEnabled="False" />
                     <Button Content="TurnLeft" Height="23" HorizontalAlignment="Left" Margin="228,0,0,42" Name="turnLeft" VerticalAlignment="Bottom" Width="75" Grid.ColumnSpan="2" Click="turnLeft_Click" IsEnabled="False" />
                     <Button Content="TurnRight" Height="23" HorizontalAlignment="Left" Margin="228,0,0,17" Name="turnRight" VerticalAlignment="Bottom" Width="75" Grid.ColumnSpan="2" Click="turnRight_Click" IsEnabled="False" />
-                    <TextBox Height="30" HorizontalAlignment="Left" Margin="36,71,0,0" Name="originalX" VerticalAlignment="Top" Width="61" Text="0.0" />
+                    <TextBox Height="30" HorizontalAlignment="Left" Margin="36,71,0,0" Name="originalX" VerticalAlignment="Top" Width="61" Text="0.0" DataContext="{Binding}" />
                     <TextBox Height="30" HorizontalAlignment="Left" Margin="36,116,0,0" Name="originalY" VerticalAlignment="Top" Width="61" Text="0.0" />
                     <Label Content="Original Position" Height="28" HorizontalAlignment="Left" Margin="5,40,0,0" Name="label9" VerticalAlignment="Top" />
                     <Label Content="X" Height="28" HorizontalAlignment="Left" Margin="13,73,0,0" Name="label10" VerticalAlignment="Top" />

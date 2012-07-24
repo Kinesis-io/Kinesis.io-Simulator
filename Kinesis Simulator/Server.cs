@@ -7,7 +7,8 @@ using SuperSocket.SocketBase.Config;
 using SuperSocket.SocketEngine;
 using SuperWebSocket;
 using System.Timers;
-using System.Diagnostics; 
+using System.Diagnostics;
+using System.Windows; 
 
 namespace Kinesis_Simulator
 {

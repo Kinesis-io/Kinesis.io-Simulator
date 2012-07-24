@@ -13,8 +13,13 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Diagnostics;
 using System.ServiceProcess;
+using Newtonsoft.Json;
 
 using System.Security.Principal;
+using System.Globalization;
+using System.Collections;
+
+using AppLimit.NetSparkle;
 
 namespace Kinesis_Simulator
 {
@@ -24,11 +29,15 @@ namespace Kinesis_Simulator
     public partial class MainWindow : Window
     {
 
+        private Sparkle _sparkle;
+
         public static Server server;
         public MainWindow()
         {
             InitializeComponent();
-            server = new Server();
+            //_sparkle = new Sparkle("http://download.kinesis.io/win_simulator/appcast.xml");
+            //_sparkle.StartLoop(true);
+            //server = new Server();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -44,12 +53,10 @@ namespace Kinesis_Simulator
             {
                 MessageBox.Show("Please run the Kinesis Simulator as an Administrator.");
             }
-
         }
 
         private void Window_Unloaded(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("hello");
             if (server != null)
             {
                 server.Stop();
@@ -237,7 +244,15 @@ namespace Kinesis_Simulator
             }      
             Canvas.SetLeft(ellipse1, mousePos.X-10);
             Canvas.SetTop(ellipse1, mousePos.Y-10);
-            server.SendToAll(String.Format("{{\"cursor\":{{\"x\":{0},\"y\":{1},\"z\":{2}}}}}", (mousePos.X / 2).ToString(), (mousePos.Y / 2).ToString(), depthValue.Content));
+
+            Hashtable position = new Hashtable();
+            position.Add("x", mousePos.X / 2);
+            position.Add("y", mousePos.Y / 2);
+            position.Add("z", depthValue.Content);
+
+            Hashtable message = new Hashtable();
+            message.Add("cursor", position);
+            server.SendToAll(JsonConvert.SerializeObject(message));
         }
 
         private void canvas1_MouseDown(object sender, MouseButtonEventArgs e)
